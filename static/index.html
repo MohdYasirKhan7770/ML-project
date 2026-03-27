@@ -14,47 +14,87 @@
         <div class="glow glow-2"></div>
     </div>
 
-    <main class="container">
-        <header class="hero">
-            <div class="badge">AI-Powered Analysis</div>
-            <h1>Fake News <span>Detector</span></h1>
-            <p>Verify the authenticity of any news article instantly using our advanced machine learning model.</p>
-        </header>
-
-        <section class="analyzer">
-            <div class="input-glass">
-                <textarea id="newsInput" placeholder="Paste the news article excerpt here..." spellcheck="false"></textarea>
-                <div class="action-bar">
-                    <span id="charCount">0 characters</span>
-                    <button id="analyzeBtn">
-                        <span class="btn-text">Analyze Article</span>
-                        <div class="loader" id="btnLoader" style="display: none;"></div>
-                    </button>
-                </div>
+    <div class="app-wrapper">
+        <aside class="sidebar" id="historySidebar">
+            <div class="sidebar-header">
+                <h3>Recent Analysis</h3>
+                <button id="clearHistory" title="Clear History">🗑️</button>
             </div>
+            <div id="historyList" class="history-list">
+                <p class="empty-msg">No recent activity</p>
+            </div>
+        </aside>
 
-            <div id="resultContainer" class="result-glass hidden">
-                <div class="result-header">
-                    <div id="resultIcon" class="icon"></div>
-                    <h2 id="resultTitle">Analysis Result</h2>
-                </div>
-                
-                <div class="confidence-section">
-                    <div class="confidence-labels">
-                        <span>Confidence Score</span>
-                        <span id="confidencePct">0%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div id="confidenceFill" class="progress-fill"></div>
+        <main class="container">
+            <header class="hero">
+                <div class="badge">AI-Powered Analysis</div>
+                <h1>Fake News <span>Detector</span></h1>
+                <p>Verify the authenticity of any news article instantly using our advanced machine learning model.</p>
+            </header>
+
+            <section class="analyzer">
+                <div class="input-glass">
+                    <textarea id="newsInput" placeholder="Paste the news article excerpt here..." spellcheck="false"></textarea>
+                    <div class="action-bar">
+                        <span id="charCount">0 characters</span>
+                        <div class="btn-group">
+                            <button id="clearBtn" class="btn-secondary">Clear</button>
+                            <button id="analyzeBtn">
+                                <span class="btn-text">Analyze Article</span>
+                                <div class="loader" id="btnLoader" style="display: none;"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="details">
-                    <p id="resultMessage">The model has evaluated this text.</p>
+                <div id="resultContainer" class="result-glass hidden">
+                    <div class="result-header">
+                        <div id="resultIcon" class="icon"></div>
+                        <h2 id="resultTitle">Analysis Result</h2>
+                        <button id="copyResult" class="copy-btn" title="Copy Result">📋</button>
+                    </div>
+                    
+                    <div class="confidence-section">
+                        <div class="confidence-labels">
+                            <span>Confidence Score</span>
+                            <span id="confidencePct">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="confidenceFill" class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="details">
+                        <p id="resultMessage">The model has evaluated this text.</p>
+                    </div>
                 </div>
-            </div>
-        </section>
-    </main>
+
+                <div class="examples-section">
+                    <h3>Try an Example</h3>
+                    <div class="example-chips">
+                        <button class="example-chip" data-text="A new study suggests that drinking three cups of coffee a day can lead to a longer life, according to researchers at Harvard University.">Health News</button>
+                        <button class="example-chip" data-text="NASA has confirmed that a secret alien base has been discovered on the far side of the moon, hidden from satellites for decades.">Space Discovery</button>
+                        <button class="example-chip" data-text="The local government announced a new initiative to provide free public transportation for all students starting next month.">Local Policy</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="info-section">
+                <div class="info-card">
+                    <h4>How it Works</h4>
+                    <p>Our model uses Natural Language Processing (NLP) to analyze linguistic patterns, sentiment, and structural cues characteristic of fabricated news.</p>
+                </div>
+                <div class="info-card">
+                    <h4>Privacy First</h4>
+                    <p>Your text is processed in real-time for analysis and is never stored on our servers beyond the duration of the request.</p>
+                </div>
+            </section>
+
+            <footer>
+                <p>&copy; 2026 Fake News Detector. Powered by Advanced AI.</p>
+            </footer>
+        </main>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

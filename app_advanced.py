@@ -12,81 +12,227 @@ import advanced_config
 # Page Config
 st.set_page_config(page_title="Advanced Fake News Detector", page_icon="🛡️", layout="wide")
 
+# Custom UI Styles
+st.markdown("""
+<style>
+    .stApp {
+        background-color: #0E1117;
+    }
+    
+    /* Header Styles */
+    .title-container {
+        text-align: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .title-container h1 {
+        color: white;
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        font-size: 2.8rem;
+    }
+    .title-container p {
+        color: #e0e6ed;
+        font-size: 1.2rem;
+        font-weight: 300;
+        letter-spacing: 0.5px;
+    }
+
+    /* Metric Cards */
+    .metric-card {
+        background: #1A1F2B;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 5px solid #4A90E2;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+        margin-bottom: 1rem;
+    }
+    .metric-card:hover {
+        transform: translateY(-2px);
+    }
+    .metric-label {
+        font-size: 0.95rem;
+        color: #8B949E;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .metric-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #FFFFFF;
+        margin: 0.2rem 0;
+        line-height: 1.2;
+    }
+    .result-fake { border-left-color: #FF4B4B; }
+    .result-real { border-left-color: #00CC96; }
+    
+    /* Evidence Section */
+    .evidence-card {
+        background: #1A1F2B;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        border: 1px solid #2D3748;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .evidence-card h4 {
+        color: #63B3ED;
+        margin-top: 0;
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
+    .evidence-source {
+        display: inline-block;
+        margin-top: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        background: rgba(74, 144, 226, 0.1);
+        color: #63B3ED;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: background 0.2s;
+    }
+    .evidence-source:hover {
+        background: rgba(74, 144, 226, 0.2);
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # Init models in cache
 @st.cache_resource
 def load_system():
-    # Attempt to load saved model, fallback to base model
     model = FakeNewsTransformer(load_saved=True)
     validator = RealTimeValidator(use_sbert=True)
     explainer = ExplainabilityEngine()
     return model, validator, explainer
 
 try:
-    with st.spinner("Loading Transformer Models... this may take a minute"):
+    with st.spinner("Initializing Deep Learning Engine..."):
         model, validator, explainer = load_system()
 except Exception as e:
     st.error(f"Error loading models: {e}")
     st.stop()
 
-st.title("🛡️ Advanced Fake News Detection System")
-st.markdown("Powered by **DistilBERT**, **LIME**, and **DuckDuckGo Real-Time Validation**.")
+# Header
+st.markdown("""
+<div class="title-container">
+    <h1>🛡️ PrismaTruth AI</h1>
+    <p>Advanced Misinformation Detection via DistilBERT, Document Similarity & LIME Explainability</p>
+</div>
+""", unsafe_allow_html=True)
 
-user_input = st.text_area("Enter News Article / Claim here:", height=150)
+# Input Area
+st.markdown("### 📝 Input Article / Claim")
+user_input = st.text_area("Paste the text you want to analyze:", height=180, label_visibility="collapsed")
 
-if st.button("Analyze News", type="primary"):
+if st.button("🚀 Analyze Authenticity", type="primary", use_container_width=True):
     if not user_input.strip():
-        st.warning("Please enter some text.")
+        st.warning("Please enter some text to analyze.")
     else:
-        with st.spinner("Analyzing with DistilBERT..."):
-            # 1. Model Prediction
+        # Step 1: Model Prediction
+        with st.spinner("🤖 Simulating neural pathways (DistilBERT Analysis)..."):
             pred_class, probs = model.predict(user_input) # 0 = Fake, 1 = Real
             model_confidence = probs[pred_class]
             
-        with st.spinner("Validating locally & via Real-Time Web Search..."):
-            # 2. Validation
+        # Step 2: Validation
+        with st.spinner("🌍 Scraping live web sources (DuckDuckGo + SBERT)..."):
             sim_score, related_articles = validator.validate(user_input)
             
-        with st.spinner("Generating Explainability Report..."):
-            # 3. Explainability
+        # Step 3: Explainability
+        with st.spinner("🔍 Generating LIME interpretability matrices..."):
             exp = explainer.explain_prediction(user_input, model.predict_proba)
             html_exp = explainer.get_html(exp) if exp else ""
 
-        # 4. Decision Engine
-        # Here we blend model probability with similarity score to make a final call
-        # Assuming class 1 is Real. P(Real) = probs[1]
+        # Step 4: Decision Engine
         p_real_model = probs[1] 
         p_real_final = (p_real_model * advanced_config.DECISION_WEIGHT_MODEL) + (sim_score * advanced_config.DECISION_WEIGHT_SIMILARITY)
         
         final_prediction = "REAL" if p_real_final > 0.5 else "FAKE"
         final_confidence = p_real_final if final_prediction == "REAL" else (1 - p_real_final)
 
-        # UI rendering
-        st.divider()
+        # ---------------- UI RENDERING ----------------
+        
+        st.markdown("<br><hr>", unsafe_allow_html=True)
+        st.markdown("### 📊 Verification Dashboard")
+        
         col1, col2, col3 = st.columns(3)
         
-        col1.metric("DistilBERT System", "REAL" if pred_class == 1 else "FAKE", f"{model_confidence:.1%} confidence")
-        col2.metric("News API Support", f"{sim_score:.2f} Similarity Score", "+ Real Evidence" if sim_score > 0.5 else "- Weak Evidence")
-        col3.metric("Final System Verdict", final_prediction, f"Combined Confidence: {final_confidence:.1%}")
-
-        st.divider()
+        # Colors & styling vars
+        sys_color = "result-real" if pred_class == 1 else "result-fake"
+        sys_text = "REAL" if pred_class == 1 else "FAKE"
+        sys_val_color = "#00CC96" if pred_class == 1 else "#FF4B4B"
         
-        col_exp, col_news = st.columns(2)
+        final_color = "result-real" if final_prediction == "REAL" else "result-fake"
+        final_val_color = "#00CC96" if final_prediction == "REAL" else "#FF4B4B"
+
+        with col1:
+            st.markdown(f"""
+            <div class="metric-card {sys_color}">
+                <div class="metric-label">Neural Assessment</div>
+                <div class="metric-value" style="color: {sys_val_color}">{sys_text}</div>
+                <div style="color: #A0AEC0">{model_confidence:.1%} BERT Confidence</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-label">Corroboration Score</div>
+                <div class="metric-value" style="color: #4A90E2">{sim_score:.2f}</div>
+                <div style="color: #A0AEC0">Cosine Similarity (0.0 to 1.0)</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+        with col3:
+            st.markdown(f"""
+            <div class="metric-card {final_color}">
+                <div class="metric-label">Final Verification</div>
+                <div class="metric-value" style="color: {final_val_color}">{final_prediction}</div>
+                <div style="color: #A0AEC0">Combined Trust: {final_confidence:.1%}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("<hr>", unsafe_allow_html=True)
+        
+        # Split body into Explanations and Sources
+        col_exp, col_news = st.columns([1.2, 1])
         
         with col_exp:
-            st.subheader("🔍 LIME Explainability Engine")
-            st.markdown("Highlights which words contributed to 'Fake' or 'Real' verdict.")
+            st.markdown("### 🔬 Interpretability (LIME)")
+            st.caption("Highlights specific words that pushed the model's decision toward 'Real' or 'Fake'.")
             if html_exp:
-                components.html(html_exp, height=350, scrolling=True)
+                with st.container():
+                    components.html(html_exp, height=450, scrolling=True)
             else:
-                st.info("Not enough text to generate LIME explanation.")
+                st.info("Input text too short to generate a meaningful LIME explanation.")
 
         with col_news:
-            st.subheader("🌐 Real-Time Evidence (DuckDuckGo)")
+            st.markdown("### 🌐 Live Evidence")
+            st.caption("Latest highly related articles scraped from DuckDuckGo.")
             if related_articles:
                 for i, article in enumerate(related_articles):
-                    st.markdown(f"**[{i+1}] {article['title']}**")
-                    st.write(article['snippet'])
-                    st.write(f"[Read Source]({article['url']})")
-                    st.markdown("---")
+                    st.markdown(f"""
+                    <div class="evidence-card">
+                        <h4>[{i+1}] {article['title']}</h4>
+                        <p style="color: #CBD5E0; font-size: 0.95rem;">{article['snippet']}...</p>
+                        <a href="{article['url']}" target="_blank" class="evidence-source">📄 Read Source</a>
+                    </div>
+                    """, unsafe_allow_html=True)
             else:
                 st.warning("No highly similar recent articles found to support this claim.")
+
+# Footer
+st.markdown("""
+<div style="text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #2D3748; color: #718096; font-size: 0.9rem;">
+    Advanced ML Fake News Detector • Built with PyTorch, SentenceTransformers & Streamlit
+</div>
+""", unsafe_allow_html=True)

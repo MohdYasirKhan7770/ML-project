@@ -1,98 +1,59 @@
-# 🔍 Fake News Detection System
+# Fake News Detector — AI Powered
 
-An **end-to-end Machine Learning pipeline** for classifying news articles as **Real** or **Fake** using NLP and scikit-learn.
+A production-ready, AI-powered system to identify and classify fake news articles using Natural Language Processing (NLP) and Machine Learning.
 
----
+## Features
+- **Modern UI**: A sleek, dark-themed glassmorphic interface.
+- **Real-time Analysis**: Instant classification with confidence scoring.
+- **History Tracking**: Keep track of your recent analyses (stored locally).
+- **Interactive Examples**: Pre-defined chips to quickly test the model.
+- **Production Backend**: Built with FastAPI, featuring structured logging and configuration management.
+- **Containerized**: Ready for deployment with Docker.
 
-## 📁 Project Structure
+## Tech Stack
+- **Backend**: FastAPI (Python)
+- **Frontend**: Vanilla HTML/JS/CSS (Premium Glassmorphism)
+- **ML Engine**: Scikit-learn (TF-IDF Vectorization + Classifier)
+- **DevOps**: Docker, python-dotenv
 
-```
-ML-project/
-├── config.py              # Centralized configuration & hyperparameters
-├── data_pipeline.py       # Data loading, cleaning, NLP preprocessing, TF-IDF
-├── model_trainer.py       # Training with GridSearchCV & cross-validation
-├── evaluator.py           # Metrics, confusion matrices, comparison charts
-├── predictor.py           # Single/batch prediction & CLI interface
-├── api.py                 # FastAPI backend server
-├── static/                # Premium HTML/CSS/JS frontend
-├── main_notebook.py       # Main orchestrator (Jupyter-compatible)
-├── requirements.txt       # Python dependencies
-├── README.md
-├── data/                  # Place True.csv & Fake.csv here
-│   ├── True.csv
-│   └── Fake.csv
-├── models/                # Saved model & vectorizer (auto-created)
-└── reports/               # Confusion matrices & comparison charts (auto-created)
-```
+## Getting Started
 
----
+### Prerequisites
+- Python 3.10+
+- [Optional] Docker
 
-## 🚀 Quick Start
+### Local Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd ML-project
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the application:
+   ```bash
+   python api.py
+   ```
+4. Access the UI at `http://127.0.0.1:8000`
 
-### 1. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+### Docker Deployment
+1. Build the image:
+   ```bash
+   docker build -t fake-news-detector .
+   ```
+2. Run the container:
+   ```bash
+   docker run -p 8000:8000 fake-news-detector
+   ```
 
-### 2. Download the dataset
-Download the **Fake and Real News Dataset** from Kaggle:
-- https://www.kaggle.com/datasets/clmentbisaillon/fake-and-real-news-dataset
+## Project Structure
+- `api.py`: Main FastAPI application entry point.
+- `config_manager.py`: Centralized configuration using `.env`.
+- `predictor.py`: Core prediction logic and model loading.
+- `static/`: Frontend assets (UI files).
+- `models/`: Directory containing pre-trained model artifacts.
 
-Place `True.csv` and `Fake.csv` into the `data/` folder.
-
-### 3. Run the pipeline
-```bash
-python main_notebook.py
-```
-Or open `main_notebook.py` in VS Code / Jupyter and run cell-by-cell (uses `# %%` markers).
-
-### 4. Launch the Premium Web UI
-```bash
-uvicorn api:app --reload
-```
-Open your browser to `http://127.0.0.1:8000`
-
-### 5. Use the CLI predictor
-```bash
-python predictor.py
-```
-
----
-
-## 🧠 Models Trained
-
-| Model                | Technique              |
-| -------------------- | ---------------------- |
-| Multinomial Naive Bayes | GridSearchCV (alpha)  |
-| Logistic Regression  | GridSearchCV (C, penalty) |
-| Random Forest        | GridSearchCV (n_estimators, max_depth) |
-
-All models are compared on **Accuracy, Precision, Recall, and F1 Score**.
-
----
-
-## 📊 Features
-
-- ✅ Modular, production-ready code
-- ✅ NLP preprocessing (NLTK: lemmatization, stopword removal)
-- ✅ TF-IDF vectorization with bigrams
-- ✅ GridSearchCV hyperparameter optimization
-- ✅ 5-fold cross-validation
-- ✅ Confusion matrix heatmaps
-- ✅ Model comparison bar charts
-- ✅ Best model saved with joblib
-- ✅ CLI for real-time prediction
-- ✅ Premium HTML/CSS/JS frontend with FastAPI backend
-- ✅ Well-commented, clean code
-
----
-
-## 🛠️ Tech Stack
-
-- **Python 3.8+**
-- **NLTK** — Text preprocessing
-- **scikit-learn** — ML models, TF-IDF, evaluation
-- **matplotlib / seaborn** — Visualization
-- **joblib** — Model serialization
-- **FastAPI & Uvicorn** — Backend API server
-- **HTML/CSS/JS** — Premium dynamic web interface
+## License
+MIT License

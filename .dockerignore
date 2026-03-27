@@ -1,0 +1,15 @@
+data/
+__pycache__/
+.git/
+.venv/
+.env
+*.pyc
+logs/
+reports/
+*.ipynb
+New Text Document.txt
+clean_out.txt
+test_output.txt
+test_results.txt
+test_results2.txt
+test_results3.txt
