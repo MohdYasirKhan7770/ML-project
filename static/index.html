@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detector | AI Powered</title>
+    <meta name="description" content="AI powered Fake news detector to verify the authenticity of news articles instantly.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="hero">
+            <div class="badge">AI-Powered Analysis</div>
+            <h1>Fake News <span>Detector</span></h1>
+            <p>Verify the authenticity of any news article instantly using our advanced machine learning model.</p>
+        </header>
+
+        <section class="analyzer">
+            <div class="input-glass">
+                <textarea id="newsInput" placeholder="Paste the news article excerpt here..." spellcheck="false"></textarea>
+                <div class="action-bar">
+                    <span id="charCount">0 characters</span>
+                    <button id="analyzeBtn">
+                        <span class="btn-text">Analyze Article</span>
+                        <div class="loader" id="btnLoader" style="display: none;"></div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="resultContainer" class="result-glass hidden">
+                <div class="result-header">
+                    <div id="resultIcon" class="icon"></div>
+                    <h2 id="resultTitle">Analysis Result</h2>
+                </div>
+                
+                <div class="confidence-section">
+                    <div class="confidence-labels">
+                        <span>Confidence Score</span>
+                        <span id="confidencePct">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="confidenceFill" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <p id="resultMessage">The model has evaluated this text.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

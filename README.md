@@ -13,7 +13,8 @@ ML-project/
 ├── model_trainer.py       # Training with GridSearchCV & cross-validation
 ├── evaluator.py           # Metrics, confusion matrices, comparison charts
 ├── predictor.py           # Single/batch prediction & CLI interface
-├── app.py                 # Streamlit web UI
+├── api.py                 # FastAPI backend server
+├── static/                # Premium HTML/CSS/JS frontend
 ├── main_notebook.py       # Main orchestrator (Jupyter-compatible)
 ├── requirements.txt       # Python dependencies
 ├── README.md
@@ -45,10 +46,11 @@ python main_notebook.py
 ```
 Or open `main_notebook.py` in VS Code / Jupyter and run cell-by-cell (uses `# %%` markers).
 
-### 4. Launch the Streamlit UI
+### 4. Launch the Premium Web UI
 ```bash
-streamlit run app.py
+uvicorn api:app --reload
 ```
+Open your browser to `http://127.0.0.1:8000`
 
 ### 5. Use the CLI predictor
 ```bash
@@ -80,7 +82,7 @@ All models are compared on **Accuracy, Precision, Recall, and F1 Score**.
 - ✅ Model comparison bar charts
 - ✅ Best model saved with joblib
 - ✅ CLI for real-time prediction
-- ✅ Streamlit web UI
+- ✅ Premium HTML/CSS/JS frontend with FastAPI backend
 - ✅ Well-commented, clean code
 
 ---
@@ -92,4 +94,5 @@ All models are compared on **Accuracy, Precision, Recall, and F1 Score**.
 - **scikit-learn** — ML models, TF-IDF, evaluation
 - **matplotlib / seaborn** — Visualization
 - **joblib** — Model serialization
-- **Streamlit** — Web interface
+- **FastAPI & Uvicorn** — Backend API server
+- **HTML/CSS/JS** — Premium dynamic web interface
