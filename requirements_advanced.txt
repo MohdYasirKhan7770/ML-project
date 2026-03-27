@@ -1,0 +1,9 @@
+torch
+transformers
+sentence-transformers
+duckduckgo-search>=5.0.0
+lime
+streamlit
+pandas
+scikit-learn
+datasets
