@@ -64,7 +64,7 @@ def train_model(name, estimator, param_grid, X_train, y_train):
         param_grid=param_grid,
         cv=config.CV_FOLDS,
         scoring=config.SCORING_METRIC,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=0,
     )
     grid.fit(X_train, y_train)
@@ -92,7 +92,7 @@ def cross_validate_model(model, X, y, cv=config.CV_FOLDS):
     Run stratified k-fold cross-validation and return per-fold scores.
     """
     scores = cross_val_score(model, X, y, cv=cv,
-                             scoring=config.SCORING_METRIC, n_jobs=-1)
+                             scoring=config.SCORING_METRIC, n_jobs=1)
     print(f"  CV Scores ({cv} folds): {np.round(scores, 4)}")
     print(f"  Mean ± Std : {scores.mean():.4f} ± {scores.std():.4f}")
     return scores

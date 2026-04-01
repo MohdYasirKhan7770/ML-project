@@ -28,8 +28,10 @@ FAKE_NEWS_FILE = os.path.join(DATA_DIR, "Fake.csv")
 # ──────────────────────────────────────────────────────────────────────────
 # 2. TEXT PREPROCESSING
 # ──────────────────────────────────────────────────────────────────────────
-MAX_FEATURES_TFIDF = 10_000          # Upper bound for TF-IDF features
-NGRAM_RANGE = (1, 2)                 # Unigrams + bigrams
+MAX_FEATURES_TFIDF = 12_000          # Upper bound for word-level TF-IDF features
+NGRAM_RANGE = (1, 2)                 # Word unigrams + bigrams
+CHAR_MAX_FEATURES_TFIDF = 18_000     # Extra character-level features for short snippets
+CHAR_NGRAM_RANGE = (3, 5)            # Character n-grams improve robustness on headlines
 TEST_SIZE = 0.20                     # Train / test split ratio
 RANDOM_STATE = 42                    # Reproducibility seed
 
@@ -41,9 +43,10 @@ NB_PARAM_GRID = {
 }
 
 LR_PARAM_GRID = {
-    "C": [0.01, 0.1, 1, 10],
+    "C": [0.1, 1, 5, 10],
     "penalty": ["l2"],
-    "max_iter": [1000],
+    "class_weight": [None, "balanced"],
+    "max_iter": [1500],
 }
 
 RF_PARAM_GRID = {
