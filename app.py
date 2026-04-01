@@ -1,43 +1,37 @@
 """
 ============================================================================
-  Streamlit UI — Fake News Detection System
+  Streamlit UI - Fake News Detection System
 ============================================================================
   A polished web interface for real-time fake news classification.
-  Run with:  streamlit run app.py
+  Run with: streamlit run app.py
 ============================================================================
 """
 
-import streamlit as st
-import joblib
 import os
+
+import joblib
+import numpy as np
+import streamlit as st
+
 import config
 from data_pipeline import preprocess_text
-import numpy as np
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# PAGE CONFIG
-# ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="Fake News Detector",
-    page_icon="🔍",
+    page_icon="F",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-
-# ──────────────────────────────────────────────────────────────────────────
-# CUSTOM CSS
-# ──────────────────────────────────────────────────────────────────────────
-st.markdown("""
+st.markdown(
+    """
 <style>
-    /* Main container */
     .main .block-container {
         padding-top: 2rem;
         max-width: 800px;
     }
 
-    /* Title styling */
     .title-container {
         text-align: center;
         padding: 1.5rem 0;
@@ -57,7 +51,6 @@ st.markdown("""
         margin-top: 0.3rem;
     }
 
-    /* Result cards */
     .result-card {
         padding: 1.5rem;
         border-radius: 12px;
@@ -84,7 +77,6 @@ st.markdown("""
         margin: 0;
     }
 
-    /* Confidence bar */
     .confidence-bar {
         background: rgba(255,255,255,0.15);
         border-radius: 10px;
@@ -100,7 +92,6 @@ st.markdown("""
     .confidence-fill-real { background: linear-gradient(90deg, #2ecc71, #27ae60); }
     .confidence-fill-fake { background: linear-gradient(90deg, #e74c3c, #c0392b); }
 
-    /* Footer */
     .footer {
         text-align: center;
         color: #888;
@@ -110,31 +101,28 @@ st.markdown("""
         border-top: 1px solid #333;
     }
 
-    /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
+    #MainMenu { visibility: hidden; }
+    footer { visibility: hidden; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
-
-# ──────────────────────────────────────────────────────────────────────────
-# HEADER
-# ──────────────────────────────────────────────────────────────────────────
-st.markdown("""
+st.markdown(
+    """
 <div class="title-container">
-    <h1>🔍 Fake News Detector</h1>
-    <p>Powered by Machine Learning & NLP</p>
+    <h1>Fake News Detector</h1>
+    <p>Powered by Machine Learning and NLP</p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# LOAD MODEL  (cached)
-# ──────────────────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_model():
     """Load the saved model and vectorizer."""
-    if not os.path.exists(config.BEST_MODEL_FILE):
+    if not os.path.exists(config.BEST_MODEL_FILE) or not os.path.exists(config.TFIDF_VECTORIZER_FILE):
         return None, None
     model = joblib.load(config.BEST_MODEL_FILE)
     tfidf = joblib.load(config.TFIDF_VECTORIZER_FILE)
@@ -143,63 +131,54 @@ def load_model():
 
 model, tfidf = load_model()
 
-if model is None:
-    st.error("⚠️ No trained model found! Please run the training notebook first "
-             "(`main_notebook.ipynb`) to train and save a model.")
+if model is None or tfidf is None:
+    st.error("No trained model found. Train and save the model artifacts first.")
     st.stop()
 
-
-# ──────────────────────────────────────────────────────────────────────────
-# INPUT AREA
-# ──────────────────────────────────────────────────────────────────────────
-st.markdown("### 📰 Paste a news article below")
+st.markdown("### Paste a news article below")
 user_input = st.text_area(
     label="News text",
     height=200,
-    placeholder="Type or paste the news article text here…",
+    placeholder="Type or paste the news article text here...",
     label_visibility="collapsed",
 )
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    analyze_btn = st.button("🔎  Analyze", use_container_width=True, type="primary")
+    analyze_btn = st.button("Analyze", use_container_width=True, type="primary")
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# PREDICTION
-# ──────────────────────────────────────────────────────────────────────────
 if analyze_btn:
     if not user_input.strip():
         st.warning("Please enter some text to analyze.")
     else:
-        with st.spinner("Analyzing…"):
+        with st.spinner("Analyzing..."):
             clean = preprocess_text(user_input)
             vector = tfidf.transform([clean])
             prediction = model.predict(vector)[0]
 
-            # Confidence
+            confidence = None
+            proba = None
             if hasattr(model, "predict_proba"):
                 proba = model.predict_proba(vector)[0]
                 confidence = float(np.max(proba))
-            else:
-                confidence = None
 
-        # Display result
         if prediction == 1:
             css_class = "result-real"
-            icon = "✅"
+            icon = "PASS"
             label = "REAL News"
             fill_class = "confidence-fill-real"
         else:
             css_class = "result-fake"
-            icon = "❌"
+            icon = "FLAG"
             label = "FAKE News"
             fill_class = "confidence-fill-fake"
 
-        conf_pct = f"{confidence:.1%}" if confidence else "N/A"
-        conf_width = f"{confidence * 100:.0f}%" if confidence else "0%"
+        conf_pct = f"{confidence:.1%}" if confidence is not None else "N/A"
+        conf_width = f"{confidence * 100:.0f}%" if confidence is not None else "0%"
 
-        st.markdown(f"""
+        st.markdown(
+            f"""
         <div class="result-card {css_class}">
             <h2>{icon} {label}</h2>
             <p>Confidence: {conf_pct}</p>
@@ -207,42 +186,35 @@ if analyze_btn:
                 <div class="confidence-fill {fill_class}" style="width: {conf_width};"></div>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )
 
-        # Show details in expander
-        with st.expander("🔬 Details"):
-            st.write(f"**Preprocessed text (first 500 chars):** {clean[:500]}…")
-            if confidence:
+        with st.expander("Details"):
+            suffix = "..." if len(clean) > 500 else ""
+            st.write(f"**Preprocessed text (first 500 chars):** {clean[:500]}{suffix}")
+            if proba is not None:
                 st.write(f"**Probability (Real):** {proba[1]:.4f}")
                 st.write(f"**Probability (Fake):** {proba[0]:.4f}")
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# SIDEBAR — ABOUT
-# ──────────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ℹ️ About")
+    st.markdown("## About")
     st.markdown(
-        "This application uses a Machine Learning model trained on "
+        "This application uses a machine learning model trained on "
         "a large corpus of labelled news articles to detect fake news."
     )
-    st.markdown("### 🛠️ Tech Stack")
+    st.markdown("### Tech Stack")
     st.markdown("- **NLP**: NLTK (lemmatization, stopwords)")
     st.markdown("- **Vectorization**: TF-IDF")
     st.markdown("- **Models**: NB / LR / RF (GridSearchCV)")
     st.markdown("- **UI**: Streamlit")
 
     st.markdown("---")
-    st.markdown(
-        '<p class="footer">Fake News Detector v1.0</p>',
-        unsafe_allow_html=True,
-    )
+    st.markdown('<p class="footer">Fake News Detector v1.0</p>', unsafe_allow_html=True)
 
 
-# ──────────────────────────────────────────────────────────────────────────
-# FOOTER
-# ──────────────────────────────────────────────────────────────────────────
 st.markdown(
-    '<div class="footer">Built with ❤️ using Python, scikit-learn & Streamlit</div>',
+    '<div class="footer">Built with Python, scikit-learn, and Streamlit</div>',
     unsafe_allow_html=True,
 )
