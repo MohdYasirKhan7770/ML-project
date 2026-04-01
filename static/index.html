@@ -3,98 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fake News Detector | AI Powered</title>
-    <meta name="description" content="AI powered fake news detector to verify the authenticity of news articles instantly.">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>PrismaTruth AI | News Verification Agent</title>
+    <meta name="description" content="A polished AI news verification website that helps review articles, explain risk, and screen for misinformation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-effects">
-        <div class="glow glow-1"></div>
-        <div class="glow glow-2"></div>
-    </div>
+    <div class="page-glow page-glow-left"></div>
+    <div class="page-glow page-glow-right"></div>
 
-    <div class="app-wrapper">
-        <aside class="sidebar" id="historySidebar">
-            <div class="sidebar-header">
-                <h3>Recent Analysis</h3>
-                <button id="clearHistory" title="Clear History">Clear</button>
+    <header class="topbar">
+        <div class="brand-lockup">
+            <div class="brand-mark">PT</div>
+            <div>
+                <p class="eyebrow">PrismaTruth AI</p>
+                <p class="brand-subtitle">News Verification Agent</p>
+            </div>
+        </div>
+        <nav class="topnav">
+            <a href="#agent">Agent</a>
+            <a href="#signals">Signals</a>
+            <a href="#workflow">Workflow</a>
+        </nav>
+    </header>
+
+    <main class="shell">
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="hero-kicker">Faster trust screening for articles and claims</p>
+                <h1>Give your AI agent a proper home on the web.</h1>
+                <p class="hero-text">
+                    PrismaTruth turns your fake-news model into a cleaner product experience:
+                    a modern landing page, a guided analysis console, and a conversational
+                    verdict summary your visitors can actually understand.
+                </p>
+                <div class="hero-actions">
+                    <a class="cta-primary" href="#agent">Try The Agent</a>
+                    <a class="cta-secondary" href="#signals">See What It Checks</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-pill">
+                        <span class="stat-value">AI Agent</span>
+                        <span class="stat-label">Conversational response layer</span>
+                    </div>
+                    <div class="stat-pill">
+                        <span class="stat-value">ML Core</span>
+                        <span class="stat-label">Saved classifier still powers the verdict</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-panel">
+                <div class="signal-card">
+                    <div class="signal-row">
+                        <span>Live status</span>
+                        <span id="healthBadge" class="health-badge">Checking...</span>
+                    </div>
+                    <h2>Model-backed article screening</h2>
+                    <p>
+                        Paste a headline, article excerpt, or full claim and let the agent return a
+                        verdict, confidence, and suggested next steps.
+                    </p>
+                    <ul class="signal-list">
+                        <li>Binary verdict from your trained classifier</li>
+                        <li>Readable AI summary for non-technical users</li>
+                        <li>Recent analysis history stored in the browser</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="agent" class="agent-grid">
+            <div class="workspace-card composer-card">
+                <div class="section-head">
+                    <p class="section-tag">Agent Console</p>
+                    <h3>Ask the verification agent</h3>
+                </div>
+                <label class="sr-only" for="newsInput">Article text</label>
+                <textarea id="newsInput" placeholder="Paste a news article, claim, or headline here..."></textarea>
+                <div class="composer-footer">
+                    <span id="charCount">0 characters</span>
+                    <div class="composer-actions">
+                        <button id="clearBtn" class="ghost-btn" type="button">Clear</button>
+                        <button id="analyzeBtn" class="primary-btn" type="button">
+                            <span class="btn-text">Analyze With Agent</span>
+                            <span id="btnLoader" class="loader" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="quick-prompts">
+                    <button class="example-chip" data-text="Government officials announced a new public transportation subsidy for students that will begin next month.">Policy update</button>
+                    <button class="example-chip" data-text="Scientists discover hidden alien command base beneath Antarctica according to leaked documents.">Sensational claim</button>
+                    <button class="example-chip" data-text="The central bank said inflation slowed in the latest quarter, according to official figures released Tuesday.">Economic report</button>
+                </div>
+            </div>
+
+            <div class="workspace-card result-card hidden" id="resultContainer">
+                <div class="section-head">
+                    <p class="section-tag">Agent Response</p>
+                    <h3 id="resultTitle">Awaiting analysis</h3>
+                </div>
+                <div class="verdict-banner">
+                    <div>
+                        <p class="mini-label">Verdict</p>
+                        <p id="verdictText" class="verdict-text">No result yet</p>
+                    </div>
+                    <div>
+                        <p class="mini-label">Confidence</p>
+                        <p id="confidencePct" class="confidence-text">0%</p>
+                    </div>
+                </div>
+                <div class="progress-shell">
+                    <div id="confidenceFill" class="progress-fill"></div>
+                </div>
+                <div class="agent-bubble">
+                    <p id="agentMessage">The agent summary will appear here.</p>
+                </div>
+                <div class="support-grid">
+                    <div class="support-card">
+                        <p class="mini-label">Summary</p>
+                        <p id="agentSummary">A plain-language explanation will appear here.</p>
+                    </div>
+                    <div class="support-card">
+                        <p class="mini-label">Checked Excerpt</p>
+                        <p id="agentExcerpt">The analyzed text preview will appear here.</p>
+                    </div>
+                </div>
+                <div class="next-step-card">
+                    <p class="mini-label">Recommended Next Steps</p>
+                    <ul id="nextSteps" class="next-steps">
+                        <li>Run an analysis to see guidance.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="signals" class="feature-strip">
+            <article class="feature-card">
+                <p class="section-tag">Signal 01</p>
+                <h3>Readable AI framing</h3>
+                <p>The site translates model output into a clearer agent response instead of exposing raw probabilities alone.</p>
+            </article>
+            <article class="feature-card">
+                <p class="section-tag">Signal 02</p>
+                <h3>Confidence-driven UI</h3>
+                <p>Visitors can see the verdict strength immediately through the response banner and confidence bar.</p>
+            </article>
+            <article class="feature-card">
+                <p class="section-tag">Signal 03</p>
+                <h3>Product-style experience</h3>
+                <p>The interface now feels like a complete AI product rather than a plain demo form.</p>
+            </article>
+        </section>
+
+        <section id="workflow" class="timeline-section">
+            <div class="section-head">
+                <p class="section-tag">Workflow</p>
+                <h3>How the integrated agent works</h3>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <span class="timeline-index">01</span>
+                    <div>
+                        <h4>Input</h4>
+                        <p>The user submits a headline, article excerpt, or claim for review.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-index">02</span>
+                    <div>
+                        <h4>Model verdict</h4>
+                        <p>Your saved fake-news classifier evaluates the processed text and returns a label with confidence.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <span class="timeline-index">03</span>
+                    <div>
+                        <h4>Agent response</h4>
+                        <p>The API wraps the result in a conversational explanation and practical next steps for the user.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section">
+            <div class="section-head">
+                <p class="section-tag">Recent Activity</p>
+                <h3>Browser-side session history</h3>
+            </div>
+            <div class="history-header">
+                <p>Your latest analyses stay available locally in this browser session.</p>
+                <button id="clearHistory" class="ghost-btn" type="button">Clear History</button>
             </div>
             <div id="historyList" class="history-list">
-                <p class="empty-msg">No recent activity</p>
+                <p class="empty-msg">No recent activity yet.</p>
             </div>
-        </aside>
+        </section>
+    </main>
 
-        <main class="container">
-            <header class="hero">
-                <div class="badge">AI-Powered Analysis</div>
-                <h1>Fake News <span>Detector</span></h1>
-                <p>Verify the authenticity of any news article instantly using our advanced machine learning model.</p>
-            </header>
-
-            <section class="analyzer">
-                <div class="input-glass">
-                    <textarea id="newsInput" placeholder="Paste the news article excerpt here..." spellcheck="false"></textarea>
-                    <div class="action-bar">
-                        <span id="charCount">0 characters</span>
-                        <div class="btn-group">
-                            <button id="clearBtn" class="btn-secondary">Clear</button>
-                            <button id="analyzeBtn">
-                                <span class="btn-text">Analyze Article</span>
-                                <div class="loader" id="btnLoader" style="display: none;"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="resultContainer" class="result-glass hidden">
-                    <div class="result-header">
-                        <div id="resultIcon" class="icon"></div>
-                        <h2 id="resultTitle">Analysis Result</h2>
-                        <button id="copyResult" class="copy-btn" title="Copy Result">Copy</button>
-                    </div>
-
-                    <div class="confidence-section">
-                        <div class="confidence-labels">
-                            <span>Confidence Score</span>
-                            <span id="confidencePct">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div id="confidenceFill" class="progress-fill"></div>
-                        </div>
-                    </div>
-
-                    <div class="details">
-                        <p id="resultMessage">The model has evaluated this text.</p>
-                    </div>
-                </div>
-
-                <div class="examples-section">
-                    <h3>Try an Example</h3>
-                    <div class="example-chips">
-                        <button class="example-chip" data-text="A new study suggests that drinking three cups of coffee a day can lead to a longer life, according to researchers at Harvard University.">Health News</button>
-                        <button class="example-chip" data-text="NASA has confirmed that a secret alien base has been discovered on the far side of the moon, hidden from satellites for decades.">Space Discovery</button>
-                        <button class="example-chip" data-text="The local government announced a new initiative to provide free public transportation for all students starting next month.">Local Policy</button>
-                    </div>
-                </div>
-            </section>
-
-            <section class="info-section">
-                <div class="info-card">
-                    <h4>How it Works</h4>
-                    <p>Our model uses Natural Language Processing (NLP) to analyze linguistic patterns, sentiment, and structural cues characteristic of fabricated news.</p>
-                </div>
-                <div class="info-card">
-                    <h4>Privacy First</h4>
-                    <p>Your text is processed in real time for analysis and is never stored on our servers beyond the duration of the request.</p>
-                </div>
-            </section>
-
-            <footer>
-                <p>&copy; 2026 Fake News Detector. Powered by Advanced AI.</p>
-            </footer>
-        </main>
-    </div>
     <script src="script.js"></script>
 </body>
 </html>
