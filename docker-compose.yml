@@ -1,7 +1,7 @@
 services:
   api:
     build: .
-    container_name: fake-news-api
+    container_name: prismatruth-api
     ports:
       - "8000:8000"
     env_file:
@@ -12,23 +12,6 @@ services:
     command: python api.py
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  ui:
-    build: .
-    container_name: fake-news-ui
-    ports:
-      - "8501:8501"
-    environment:
-      - STREAMLIT_SERVER_PORT=8501
-      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
-    command: streamlit run app.py
-    depends_on:
-      - api
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8501"]
       interval: 30s
       timeout: 10s
       retries: 3

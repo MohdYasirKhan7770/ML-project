@@ -1,19 +1,22 @@
-# Fake News Detection - Dependencies
+# Fake News Detection — Core Dependencies
+# Sufficient for all project modules: API, Streamlit UI, training, evaluation.
+
+# Data & ML
 pandas>=1.5.0
 numpy>=1.23.0
 scikit-learn>=1.2.0
 nltk>=3.8.0
 joblib>=1.2.0
+
+# Visualization
 matplotlib>=3.6.0
 seaborn>=0.12.0
-streamlit>=1.28.0
+
+# API
 fastapi>=0.100.0
 uvicorn>=0.23.0
 pydantic>=2.0.0
 python-dotenv>=1.0.0
-torch>=2.2.0
-transformers>=4.40.0
-sentence-transformers>=2.7.0
-duckduckgo-search>=5.0.0
-lime>=0.2.0.1
-datasets>=2.18.0
+
+# Streamlit (alternative UI)
+streamlit>=1.28.0

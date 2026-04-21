@@ -1,28 +1,22 @@
-# Use an official Python runtime as a parent image
 FROM python:3.10-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# System dependencies
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
+# Install Python dependencies
 COPY requirements.txt .
-
-# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Pre-download NLTK resources
+# Pre-download NLTK data
 RUN python -m nltk.downloader stopwords wordnet punkt punkt_tab
 
-# Copy the rest of the application code (except what's in .dockerignore)
+# Copy application
 COPY . .
 
-# Expose the ports the app runs on (FastAPI and Streamlit)
-EXPOSE 8000 8501
+# Expose FastAPI port
+EXPOSE 8000
 
-# Run api.py by default
+# Start the server
 CMD ["python", "api.py"]

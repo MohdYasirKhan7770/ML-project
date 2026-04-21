@@ -1,26 +1,31 @@
+# Python cache
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 
+# Virtual environment
 .venv/
+env/
+venv/
+
+# Environment variables (secrets)
 .env
 
+# Streamlit
 .streamlit/
+
+# Test / pytest
 .pytest_cache/
 .mypy_cache/
 
+# Generated output directories (not needed in repo)
 logs/
-reports/
 results/
 
+# Raw datasets (too large for git)
 data/
 
-Microsoft/
-
-New Text Document.txt
-clean_out.txt
-test_output.txt
-test_results.txt
-test_results2.txt
-test_results3.txt
+# NOTE: models/ and reports/ ARE intentionally tracked
+# so the pre-trained model artifacts and evaluation charts
+# are available without re-training.
